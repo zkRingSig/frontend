@@ -4,8 +4,8 @@ import { Card } from "./Card";
 import { Button } from "./Button";
 import { AmountInput } from "./AmountInput";
 import { ethers } from "ethers";
-import { deposit, withdraw } from "./zkRingSig";
-import { useEthersSigner } from "./ethers";
+import { deposit, withdraw } from "./contract/zkRingSig";
+import { useEthersSigner } from "./contract/ethers";
 import data from "./lib/abi/zkRingSig.json";
 import { TransactionNotification } from "./TransactionNotification";
 
@@ -22,7 +22,7 @@ interface Transaction {
   status: TransactionStatus;
 }
 
-const CONTRACT_ADDRESS = "0xCf7Ed3AccA5a467e9e704C703E8D87F634fB0Fc9";
+const CONTRACT_ADDRESS = "0xbFD98012e8Fd1E718679e0b89CFe8715A8222a02";
 
 export function TransactionCard() {
   const [transactionType, setTransactionType] =
@@ -233,7 +233,7 @@ export function TransactionCard() {
                     className="text-accent-blue shrink-0"
                   />
                   <p className="text-xs text-accent-blue relative">
-                    Minimum transaction amount is 0.1 ETH
+                    Minimum transaction amount is 0.001 ETH
                   </p>
                 </div>
               )}
