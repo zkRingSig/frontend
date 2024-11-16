@@ -1,10 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { Wallet, Zap } from "lucide-react";
 import { Button } from "./Button";
+import { ConnectKitButton } from "connectkit";
+import { useConnect, useDisconnect } from "wagmi";
 
 export function Header() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+
+  const { disconnect } = useDisconnect();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -56,9 +60,9 @@ export function Header() {
             <Zap className="w-6 h-6 text-primary transition-all duration-300 group-hover:scale-125 group-hover:rotate-12" />
             <span
               className="text-2xl font-bold bg-gradient-to-r from-primary via-accent-blue to-primary bg-[length:200%_100%] bg-clip-text text-transparent animate-[text-shimmer_3s_linear_infinite] glitch-effect"
-              data-text="TORNADO"
+              data-text="zkRingSig"
             >
-              TORNADO
+              zkRingSig
             </span>
           </div>
 
@@ -88,17 +92,20 @@ export function Header() {
             <div
               className=" absolute inset-0 bg-gradient-to-r from-primary/20 via-accent-blue/20 rounded-xl
                  to-primary/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500"
-            />
+            ></div>
+            <div className=" absolute" style={{ zIndex: 999, opacity: 0 }}>
+              <ConnectKitButton theme="nouns" />
+            </div>
 
             <Button
               size="sm"
               className="flex items-center gap-2 group/connect relative overflow-hidden"
             >
               <div className="flex items-center justify-center gap-2">
-                <Wallet
+                {/* <Wallet
                   size={16}
                   className="transition-transform duration-300 group-hover/connect:scale-110"
-                />
+                /> */}
                 <span className="relative z-10">Connect Wallet</span>
               </div>
             </Button>
