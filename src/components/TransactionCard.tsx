@@ -336,7 +336,11 @@ export function TransactionCard({
                   <ShieldCheck className="text-primary" size={20} />
                 </div>
                 <div>
-                  {withdrawNote ? (
+                  {transactionType === "withdraw" && kHStr ? (
+                    <h3 className="text-sm font-medium text-primary mb-1">
+                      Check The Withdraw Proof
+                    </h3>
+                  ) : withdrawNote ? (
                     <h3 className="text-sm font-medium text-primary mb-1">
                       Keep The Secret Note!
                     </h3>
@@ -345,10 +349,19 @@ export function TransactionCard({
                       Security Guarantee
                     </h3>
                   )}
-                  {withdrawNote ? (
+                  {transactionType === "withdraw" && kHStr ? (
                     <p
-                      className="text-xs text-gray-400 leading-relaxed cursor-pointer break-all"
+                      className="text-xs text-gray-400 leading-relaxed cursor-pointer break-all line-clamp-3"
                       onClick={handleCopy}
+                      title={kHStr}
+                    >
+                      {kHStr}
+                    </p>
+                  ) : withdrawNote ? (
+                    <p
+                      className="text-xs text-gray-400 leading-relaxed cursor-pointer break-all line-clamp-3"
+                      onClick={handleCopy}
+                      title={withdrawNote}
                     >
                       {withdrawNote}
                     </p>
@@ -398,14 +411,6 @@ export function TransactionCard({
           </div>
         </div>
       </div>
-
-      {/* Display kH_str */}
-      {kHStr && (
-        <div className="mt-4 p-4 bg-dark/50 border border-primary/10 rounded-lg">
-          <h3 className="text-sm font-medium text-primary mb-1">kH_str</h3>
-          <p className="text-xs text-gray-400">{kHStr}</p>
-        </div>
-      )}
     </Card>
   );
 }

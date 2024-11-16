@@ -38,6 +38,7 @@ export function DecryptionModal({
   const [hash, setHash] = useState("");
   const [result, setResult] = useState({ id: "", result: "" });
   const [error, setError] = useState("");
+  const [copyMessage, setCopyMessage] = useState("");
 
   const proofArgsStr = useMemo(() => proofArgs.join(""), [proofArgs]);
 
@@ -45,9 +46,12 @@ export function DecryptionModal({
     setProof(proofArgsStr);
   }, [proofArgsStr]);
 
-  useEffect(() => {
-    !isOpen && setStatus("input");
-  }, [isOpen]);
+  const reset = () => {
+    setStatus("input");
+    setHash("");
+    setResult({ id: "", result: "" });
+    setError("");
+  };
 
   const readResponse = async () => {
     const functionsConsumer = new ethers.Contract(consumerAddress, abi, signer);
@@ -164,10 +168,13 @@ export function DecryptionModal({
   const copyToClipboard = (text: string) => {
     navigator.clipboard.writeText(text).then(
       () => {
-        console.log("Copying to clipboard was successful!");
+        setCopyMessage("Copied to clipboard!");
+        setTimeout(() => setCopyMessage(""), 2000); // Clear message after 2 seconds
       },
       (err) => {
         console.error("Could not copy text: ", err);
+        setCopyMessage("Failed to copy!");
+        setTimeout(() => setCopyMessage(""), 2000); // Clear message after 2 seconds
       }
     );
   };
@@ -285,6 +292,12 @@ export function DecryptionModal({
                   >
                     Close
                   </button>
+                  <button
+                    onClick={reset}
+                    className="mt-6 px-6 py-2 bg-emerald-500 text-black rounded-lg font-medium hover:bg-emerald-400 transition-colors"
+                  >
+                    Reset
+                  </button>
                 </div>
               )}
 
@@ -306,6 +319,11 @@ export function DecryptionModal({
             </div>
           </motion.div>
         </motion.div>
+      )}
+      {copyMessage && (
+        <div className="fixed bottom-4 right-4 bg-emerald-500 text-white px-4 py-2 rounded-lg shadow-lg">
+          {copyMessage}
+        </div>
       )}
     </AnimatePresence>
   );
