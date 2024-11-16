@@ -196,7 +196,11 @@ export function DecryptionModal({
             className="bg-[#1e2329] rounded-2xl p-8 w-full max-w-lg mx-4 border border-gray-800 shadow-xl"
           >
             <div className="flex justify-between items-center mb-6">
-              <h2 className="text-2xl font-semibold text-emerald-400">
+              <h2
+                className="text-2xl font-semibold text-emerald-400
+              relative z-10 bg-gradient-to-r from-primary via-accent-blue to-primary bg-[length:200%_100%] bg-clip-text text-transparent animate-[text-shimmer_3s_linear_infinite]
+              "
+              >
                 Decryption Request
               </h2>
               <button
@@ -294,7 +298,7 @@ export function DecryptionModal({
                   </button>
                   <button
                     onClick={reset}
-                    className="mt-6 px-6 py-2 bg-emerald-500 text-black rounded-lg font-medium hover:bg-emerald-400 transition-colors"
+                    className="ml-6 mt-6 px-6 py-2 text-black bg-teal-500 rounded-lg font-medium hover:bg-emerald-400 transition-colors"
                   >
                     Reset
                   </button>
