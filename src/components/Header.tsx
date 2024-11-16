@@ -94,9 +94,9 @@ export function Header({ proofArgs }: { proofArgs: any[] }) {
         <div className="flex items-center gap-6">
           <div className="flex items-center gap-3 group">
             <img
-              className="w-6 h-6 text-primary transition-all duration-300 group-hover:scale-125 group-hover:rotate-12"
+              className="w-6 h-6 text-primary transition-all duration-300 group-hover:scale-125 group-hover:rotate-12 animate-spin-once animate-spin-loop"
               src="/zk.jpg"
-              alt="zk"
+              alt="zkRingSig"
             />
             {/* <Zap className="w-6 h-6 text-primary transition-all duration-300 group-hover:scale-125 group-hover:rotate-12" /> */}
             <span
