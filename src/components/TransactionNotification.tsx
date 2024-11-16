@@ -8,6 +8,7 @@ interface Transaction {
   amount: string;
   timestamp: number;
   status: "pending" | "confirmed" | "failed";
+  network: "mainnet" | "ropsten" | "rinkeby" | "sepolia";
 }
 
 interface TransactionNotificationProps {
@@ -43,6 +44,22 @@ export function TransactionNotification({
     failed: "Failed",
   }[transaction.status];
 
+  const explorerUrl = (() => {
+    switch (transaction.network) {
+      case "mainnet":
+        return "https://etherscan.io/tx/";
+      case "ropsten":
+        return "https://ropsten.etherscan.io/tx/";
+      case "rinkeby":
+        return "https://rinkeby.etherscan.io/tx/";
+      case "sepolia":
+        return "https://sepolia.etherscan.io/tx/";
+      default:
+        console.error("Unsupported network:", transaction.network);
+        return "#"; // Fallback URL or handle error appropriately
+    }
+  })();
+
   return (
     <div
       className={cn(
@@ -75,7 +92,7 @@ export function TransactionNotification({
 
             <a
               title={transaction.hash}
-              href={`https://etherscan.io/tx/${transaction.hash}`}
+              href={`${explorerUrl}${transaction.hash}`}
               target="_blank"
               rel="noopener noreferrer"
               className="text-xs text-gray-500 hover:text-primary transition-colors duration-300 flex items-center gap-1 truncate"

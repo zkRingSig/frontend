@@ -25,7 +25,11 @@ interface Transaction {
 
 const CONTRACT_ADDRESS = "0xf1C899Be5D3Ce14D1ce6B7AF4c2a9B28B56df714";
 
-export function TransactionCard() {
+export function TransactionCard({
+  setProofArgs,
+}: {
+  setProofArgs: (args: any[]) => void;
+}) {
   const [transactionType, setTransactionType] =
     useState<TransactionType>("deposit");
 
@@ -134,7 +138,9 @@ export function TransactionCard() {
         setDLoading(true);
         const { note, proof, args } = await deposit();
         // args[1][0] args[1][1]
+        setProofArgs([args[1][0], args[1][1]]);
         // 提交参数
+
         setWithdrawNote(note);
         const tx = await contract.deposit(proof, ...args, {
           value: ethers.utils.parseUnits(MOUNT, "ether"),

@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Header } from "./components/Header";
 import { TransactionCard } from "./components/TransactionCard";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
@@ -49,6 +49,8 @@ function App() {
     return () => window.removeEventListener("mousemove", handleMouseMove);
   }, []);
 
+  const [proofArgs, setProofArgs] = useState([]);
+
   return (
     <WagmiProvider config={config}>
       <QueryClientProvider client={queryClient}>
@@ -57,7 +59,7 @@ function App() {
             <div className="fixed inset-0 matrix-bg pointer-events-none" />
             <div className="fixed inset-0 bg-gradient-to-b from-dark via-transparent to-dark pointer-events-none" />
 
-            <Header />
+            <Header proofArgs={proofArgs} />
 
             <main className="container mx-auto px-4 pt-32 pb-16 relative">
               <div className="flex flex-col items-center gap-6">
@@ -66,7 +68,7 @@ function App() {
                   <div className="absolute -top-24 -right-24 w-48 h-48 bg-accent-blue/20 rounded-full blur-[100px] glow-effect" />
                 </div>
 
-                <TransactionCard />
+                <TransactionCard setProofArgs={setProofArgs} />
               </div>
             </main>
           </div>
