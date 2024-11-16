@@ -714,7 +714,7 @@ function gcd (a, b) {
 // console.log(gcd(-8n, 6n))
 
 
-class CurveBabyJubJub {
+export class CurveBabyJubJub {
   constructor() {
     // Curve parameters
     // E: 168700x^2 + y^2 = 1 + 168696x^2y^2

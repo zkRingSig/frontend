@@ -2,6 +2,7 @@ import * as snarkjs from "snarkjs";
 import { utils } from "ffjavascript";
 import { buildBabyjub, buildPedersenHash } from "circomlibjs";
 import merkleTree from "fixed-merkle-tree";
+import { utf8ArrayToStr } from "./functions";
 
 const MERKLE_TREE_HEIGHT = 10;
 const NUM = 32;
@@ -636,7 +637,14 @@ export async function withdraw (contract, note, recipient) {
   // await tx.wait();
   // console.log(`tx hash ${tx.hash}`)
   // check_kH_Hash(deposit.secret);
-  return { proof, args };
+
+  let H = [6735765341259699143139827009349789187539604393960868243100492584654517940357n, 1445652303469103813662583567528138751416053152308969014699137575678043505465n];  // unkown privkey
+
+
+  let myCurve = new CurveBabyJubJub();
+  let kH = myCurve.scalarMulAny(deposit.secret, H);
+  let kH_str = toHex(kH[0], 32) + toHex(kH[1], 32);
+  return { proof, args,  kH_str };
 
 
 

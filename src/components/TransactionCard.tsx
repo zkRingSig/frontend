@@ -54,6 +54,8 @@ export function TransactionCard({
 
   const [balance, setBalance] = useState<string>("0.0 ETH");
 
+  const [kHStr, setKHStr] = useState<string>("");
+
   useEffect(() => {
     setRecipientAddress(address);
   }, [address]);
@@ -124,11 +126,12 @@ export function TransactionCard({
           return;
         }
         setWLoading(true);
-        const { proof, args } = await withdraw(
+        const { proof, args, kH_str } = await withdraw(
           contract,
           withdrawNote,
           recipientAddress
         );
+        setKHStr(kH_str);
         const tx = await contract.withdraw(proof, args);
         startTransaction(tx.hash);
 
@@ -343,6 +346,14 @@ export function TransactionCard({
           </div>
         </div>
       </div>
+
+      {/* Display kH_str */}
+      {kHStr && (
+        <div className="mt-4 p-4 bg-dark/50 border border-primary/10 rounded-lg">
+          <h3 className="text-sm font-medium text-primary mb-1">kH_str</h3>
+          <p className="text-xs text-gray-400">{kHStr}</p>
+        </div>
+      )}
     </Card>
   );
 }
