@@ -290,21 +290,30 @@ const toHex = (number, length = 32) =>
 
 
 
-async function generateMerkleProof (contract, deposit) {
+async function generateMerkleProof (contract, deposit, commitments) {
   // get constract state
-  const eventFilter = contract.filters.Deposit();
-  let events = await contract.queryFilter(eventFilter, -100, "latest");
-  // console.log(events);
-  // create merkle tree
-  const leaves = events
-    .sort((a, b) => a.args.leafIndex - b.args.leafIndex)
-    .map((e) => e.args.commitment);
+  // const eventFilter = contract.filters.Deposit();
+  // let events = await contract.queryFilter(eventFilter, -100, "latest");
+  // // console.log(events);
+  // // create merkle tree
+  // const leaves = events
+  //   .sort((a, b) => a.args.leafIndex - b.args.leafIndex)
+  //   .map((e) => e.args.commitment);
+  const leaves = commitments;
+
   const tree = new merkleTree(MERKLE_TREE_HEIGHT, leaves);
   // generate path
-  let depositEvent = events.find(
-    (e) => e.args.commitment === toHex(deposit.commitment)
-  );
-  let leafIndex = depositEvent ? depositEvent.args.leafIndex : -1;
+  // let depositEvent = events.find(
+  //   (e) => e.args.commitment === toHex(deposit.commitment)
+  // );
+  // let leafIndex = depositEvent ? depositEvent.args.leafIndex : -1;
+
+  let leafIndex = -1;
+  for (let i = 0; i < commitments.length; i++) {
+    // console.log(commitments[i]);
+    // console.log(toHex(deposit.commitment));
+    if (commitments[i] == toHex(deposit.commitment)) leafIndex = i;
+  }
 
   if (leafIndex == -1) {
     alert("The deposit is not found in the tree");
@@ -374,11 +383,12 @@ async function generateSnarkProof_deposit (deposit) {
 }
 
 
-async function generateSnarkProof_withdraw (contract, deposit, recipient) {
+async function generateSnarkProof_withdraw (contract, deposit, recipient, commitments) {
   // geneate merkle proof
   const { pathElements, pathIndices, root } = await generateMerkleProof(
     contract,
-    deposit
+    deposit,
+    commitments
   );
 
   // console.log("root", root);
@@ -618,9 +628,9 @@ export async function withdraw (contract, note, recipient) {
   // parse note
   let deposit = await parseNote(note);
   // console.log(toHex(deposit.secret));
-
+  const commitments = await contract.getCommitments();
   // generate proof
-  const { proof, args } = await generateSnarkProof_withdraw(contract, deposit, recipient);
+  const { proof, args } = await generateSnarkProof_withdraw(contract, deposit, recipient, commitments);
   // send withdraw tx
   // const tx = await contract.withdraw(proof, args);
   // await tx.wait();

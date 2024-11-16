@@ -23,7 +23,7 @@ interface Transaction {
   status: TransactionStatus;
 }
 
-const CONTRACT_ADDRESS = "0xbFD98012e8Fd1E718679e0b89CFe8715A8222a02";
+const CONTRACT_ADDRESS = "0xf1C899Be5D3Ce14D1ce6B7AF4c2a9B28B56df714";
 
 export function TransactionCard() {
   const [transactionType, setTransactionType] =
