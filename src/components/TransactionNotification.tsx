@@ -86,8 +86,9 @@ export function TransactionNotification({
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-xs text-gray-500 hover:text-primary transition-colors duration-300 flex items-center gap-1 truncate"
+                style={{ maxWidth: "100%" }}
               >
-                {truncateAddress(transaction.hash)}
+                <span className="truncate">{transaction.hash}</span>
                 <ArrowUpRight size={12} />
               </a>
             )}

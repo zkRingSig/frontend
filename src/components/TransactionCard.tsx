@@ -181,6 +181,17 @@ export function TransactionCard({
     }
   };
 
+  const [copied, setCopied] = useState(false);
+
+  const handleCopy = () => {
+    if (withdrawNote) {
+      navigator.clipboard.writeText(withdrawNote).then(() => {
+        setCopied(true);
+        setTimeout(() => setCopied(false), 2000); // Reset copied state after 2 seconds
+      });
+    }
+  };
+
   return (
     <Card className="w-full max-w-md">
       <div className="transaction-card relative">
@@ -215,7 +226,7 @@ export function TransactionCard({
                 setTransactionType(
                   transactionType === "deposit" ? "withdraw" : "deposit"
                 );
-                clearTransaction();
+                // clearTransaction();
               }}
               onMouseEnter={() => setIsHovering(true)}
               onMouseLeave={() => setIsHovering(false)}
@@ -320,24 +331,42 @@ export function TransactionCard({
             {/* Security info with enhanced visual */}
             <div className="p-4 rounded-xl bg-dark/50 border border-primary/10 relative overflow-hidden group">
               <div className="absolute inset-0 bg-gradient-to-r from-primary/5 via-transparent to-accent-blue/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-              <div className="flex items-start gap-3 relative">
+              <div className="flex items-start gap-3 relative h-20">
                 <div className="p-2 rounded-lg bg-primary/10 shrink-0 group-hover:scale-110 transition-transform duration-300">
                   <ShieldCheck className="text-primary" size={20} />
                 </div>
                 <div>
-                  <h3 className="text-sm font-medium text-primary mb-1">
-                    Security Guarantee
-                  </h3>
-                  <p className="text-xs text-gray-400 leading-relaxed">
-                    Your transaction is protected by zero-knowledge proofs and
-                    will remain completely anonymous on the blockchain.
-                  </p>
+                  {withdrawNote ? (
+                    <h3 className="text-sm font-medium text-primary mb-1">
+                      Keep The Secret Note!
+                    </h3>
+                  ) : (
+                    <h3 className="text-sm font-medium text-primary mb-1">
+                      Security Guarantee
+                    </h3>
+                  )}
+                  {withdrawNote ? (
+                    <p
+                      className="text-xs text-gray-400 leading-relaxed cursor-pointer break-all"
+                      onClick={handleCopy}
+                    >
+                      {withdrawNote}
+                    </p>
+                  ) : (
+                    <p className="text-xs text-gray-400 leading-relaxed">
+                      Your transaction is protected by zero-knowledge proofs and
+                      will remain completely anonymous on the blockchain.
+                    </p>
+                  )}
+                  {copied && (
+                    <span className="text-xs text-green-500">Copied!</span>
+                  )}
                 </div>
               </div>
             </div>
 
             {/* Current Transaction Status */}
-            {currentTransaction && (
+            {currentTransaction?.type === transactionType && (
               <TransactionNotification
                 transaction={currentTransaction}
                 onClose={() => setCurrentTransaction(null)}
