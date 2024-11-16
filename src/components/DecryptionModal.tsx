@@ -140,7 +140,7 @@ export function DecryptionModal({
   const checkTransaction = async () => {
     const previousRequestId = localStorage.getItem("lastRequestId") || "";
 
-    let intervalId = setTimeout(async () => {
+    const intervalId = setTimeout(async () => {
       const { s_lastRequestId, s_lastResponse, s_lastError } =
         await readResponse();
 

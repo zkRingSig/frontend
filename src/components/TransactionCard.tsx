@@ -112,13 +112,15 @@ export function TransactionCard({
     });
   };
 
-  const finisedTransaction = async () => {
-    if (!currentTransaction) return;
-
+  const finisedTransaction = async (hash: string, hasError?: boolean) => {
     // Simulate blockchain confirmation
-    setCurrentTransaction((prev) =>
-      prev ? { ...prev, status: "confirmed" } : null
-    );
+    setCurrentTransaction({
+      hash,
+      type: transactionType,
+      amount,
+      timestamp: Date.now(),
+      status: hasError ? "failed" : "confirmed",
+    });
     setIsProcessing(false);
   };
 
@@ -144,10 +146,10 @@ export function TransactionCard({
         const receipt = await tx.wait();
         if (receipt.status === 1) {
           // 1 表示交易成功
-          finisedTransaction();
+          finisedTransaction(tx.hash);
         } else {
           // 处理交易失败的情况
-          console.error("Transaction failed");
+          finisedTransaction(tx.hash, true);
         }
       } else {
         startTransaction();
@@ -166,10 +168,10 @@ export function TransactionCard({
         const receipt = await tx.wait();
         if (receipt.status === 1) {
           // 1 表示交易成功
-          finisedTransaction();
+          finisedTransaction(tx.hash);
         } else {
           // 处理交易失败的情况
-          console.error("Transaction failed");
+          finisedTransaction(tx.hash, true);
         }
       }
     } catch (error) {
