@@ -39,7 +39,7 @@ export function DecryptionModal({
   const [result, setResult] = useState({ id: "", result: "" });
   const [error, setError] = useState("");
 
-  const proofArgsStr = useMemo(() => proofArgs.join(), [proofArgs]);
+  const proofArgsStr = useMemo(() => proofArgs.join(""), [proofArgs]);
 
   useEffect(() => {
     setProof(proofArgsStr);

@@ -6,10 +6,10 @@ import { utf8ArrayToStr } from "./functions";
 
 const MERKLE_TREE_HEIGHT = 10;
 const NUM = 32;
-const wasmFile_deposit = "./src/components/zk/deposit.wasm";
-const zkeyFile_deposit = "./src/components/zk/deposit.zkey";
-const wasmFile_withdraw = "./src/components/zk/withdraw.wasm";
-const zkeyFile_withdraw = "./src/components/zk/withdraw.zkey";
+const wasmFile_deposit = "/zk/deposit.wasm";
+const zkeyFile_deposit = "/zk/deposit.zkey";
+const wasmFile_withdraw = "/zk/withdraw.wasm";
+const zkeyFile_withdraw = "/zk/withdraw.zkey";
 
 
 
@@ -644,7 +644,7 @@ export async function withdraw (contract, note, recipient) {
   let myCurve = new CurveBabyJubJub();
   let kH = myCurve.scalarMulAny(deposit.secret, H);
   let kH_str = toHex(kH[0], 32) + toHex(kH[1], 32);
-  return { proof, args,  kH_str };
+  return { proof, args, kH_str };
 
 
 
