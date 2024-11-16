@@ -111,6 +111,45 @@ export function TransactionCard() {
     }, 1000);
   };
 
+  const onClickTx = async () => {
+    try {
+      // 取钱
+      if (transactionType === "withdraw") {
+        // 检查参数是否存在
+        if (!withdrawNote || !recipientAddress) {
+          return;
+        }
+        setWLoading(true);
+        const { proof, args } = await withdraw(
+          contract,
+          withdrawNote,
+          recipientAddress
+        );
+        const tx = await contract.withdraw(proof, args);
+        startTransaction(tx.hash);
+
+        await tx.wait();
+      } else {
+        // 存钱
+        setDLoading(true);
+        const { note, proof, args } = await deposit();
+        // args[1][0] args[1][1]
+        // 提交参数
+        setWithdrawNote(note);
+        const tx = await contract.deposit(proof, ...args, {
+          value: ethers.utils.parseUnits(MOUNT, "ether"),
+        });
+        startTransaction(tx.hash);
+        await tx.wait();
+      }
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setDLoading(false);
+      finisedTransaction();
+    }
+  };
+
   return (
     <Card className="w-full max-w-md">
       <div className="transaction-card relative">
@@ -283,42 +322,7 @@ export function TransactionCard() {
               <Button
                 size="lg"
                 className="w-full group relative overflow-hidden"
-                onClick={async () => {
-                  try {
-                    // 取钱
-                    if (transactionType === "withdraw") {
-                      // 检查参数是否存在
-                      if (!withdrawNote || !recipientAddress) {
-                        return;
-                      }
-                      setWLoading(true);
-                      const { proof, args } = await withdraw(
-                        contract,
-                        withdrawNote,
-                        recipientAddress
-                      );
-                      const tx = await contract.withdraw(proof, args);
-                      startTransaction(tx.hash);
-
-                      await tx.wait();
-                    } else {
-                      // 存钱
-                      setDLoading(true);
-                      const { note, proof, args } = await deposit();
-                      setWithdrawNote(note);
-                      const tx = await contract.deposit(proof, ...args, {
-                        value: ethers.utils.parseUnits(MOUNT, "ether"),
-                      });
-                      startTransaction(tx.hash);
-                      await tx.wait();
-                    }
-                  } catch (error) {
-                    console.error(error);
-                  } finally {
-                    setDLoading(false);
-                    finisedTransaction();
-                  }
-                }}
+                onClick={onClickTx}
               >
                 <div className="flex items-center justify-center relative">
                   <Wallet className="w-4 h-4 mr-2 transition-transform duration-300 group-hover:scale-110" />

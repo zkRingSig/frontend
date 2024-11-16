@@ -13,7 +13,7 @@ export function AmountInput({ label, className, ...props }: AmountInputProps) {
         className={cn(
           "w-full bg-dark-lighter px-4 py-2 rounded-xl",
           "border border-primary/20 focus:border-primary/40",
-          "text-base text-gray-100 placeholder:text-gray-500",
+          "text-sm text-gray-100 placeholder:text-gray-500",
           "focus:outline-none focus:ring-2 focus:ring-primary/20",
           "transition-all duration-300",
           className
