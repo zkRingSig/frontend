@@ -79,16 +79,18 @@ export function TransactionNotification({
               <span className="text-xs text-gray-500">• {statusText}</span>
             </div>
 
-       {transaction.hash &&     <a
-              title={transaction.hash}
-              href={`${EXPLORER_URL}${transaction.hash}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-xs text-gray-500 hover:text-primary transition-colors duration-300 flex items-center gap-1 truncate"
-            >
-              {truncateAddress(transaction.hash)}
-              <ArrowUpRight size={12} />
-            </a>}
+            {transaction.hash && (
+              <a
+                title={transaction.hash}
+                href={`${EXPLORER_URL}${transaction.hash}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-xs text-gray-500 hover:text-primary transition-colors duration-300 flex items-center gap-1 truncate"
+              >
+                {truncateAddress(transaction.hash)}
+                <ArrowUpRight size={12} />
+              </a>
+            )}
           </div>
         </div>
       </div>

@@ -4,7 +4,6 @@ import { Button } from "./Button";
 import { ConnectKitButton } from "connectkit";
 import { useAccount } from "wagmi";
 import { useEthersSigner } from "./contract/ethers";
-import { ethers } from "ethers";
 import { DecryptionModal } from "./DecryptionModal";
 
 import FunctionsConsumer from "./decryption/FunctionsConsumer.json";

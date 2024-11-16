@@ -140,7 +140,7 @@ export function DecryptionModal({
   const checkTransaction = async () => {
     const previousRequestId = localStorage.getItem("lastRequestId") || "";
 
-    const intervalId = setInterval(async () => {
+    let intervalId = setTimeout(async () => {
       const { s_lastRequestId, s_lastResponse, s_lastError } =
         await readResponse();
 
@@ -151,11 +151,25 @@ export function DecryptionModal({
           id: s_lastRequestId,
           result: s_lastResponse || s_lastError,
         });
-        clearInterval(intervalId);
+        clearTimeout(intervalId);
+      } else {
+        clearTimeout(intervalId);
+        checkTransaction();
       }
     }, 3000); // 3000ms = 3 seconds
 
-    return () => clearInterval(intervalId); // Return a function to clear the interval if needed
+    return () => clearTimeout(intervalId); // Return a function to clear the interval if needed
+  };
+
+  const copyToClipboard = (text: string) => {
+    navigator.clipboard.writeText(text).then(
+      () => {
+        console.log("Copying to clipboard was successful!");
+      },
+      (err) => {
+        console.error("Could not copy text: ", err);
+      }
+    );
   };
 
   return (
@@ -223,7 +237,17 @@ export function DecryptionModal({
                   {hash && (
                     <p className="mt-2 text-sm text-gray-400">
                       Transaction Hash:{" "}
-                      <span className="text-emerald-400">{hash}</span>
+                      <span
+                        className="text-emerald-400 block overflow-hidden break-words cursor-pointer"
+                        onClick={() =>
+                          window.open(
+                            `https://etherscan.io/tx/${hash}`,
+                            "_blank"
+                          )
+                        }
+                      >
+                        {hash}
+                      </span>
                     </p>
                   )}
                 </div>
@@ -238,13 +262,19 @@ export function DecryptionModal({
                   <div className="bg-[#2a2f36] rounded-xl p-4 mt-4 text-left">
                     <p className="text-sm text-gray-300 mb-2">
                       Transaction ID:{" "}
-                      <span className="text-emerald-400 block overflow-hidden break-words">
+                      <span
+                        className="text-emerald-400 block overflow-hidden break-words cursor-pointer"
+                        onClick={() => copyToClipboard(result.id)}
+                      >
                         {result.id}
                       </span>
                     </p>
                     <p className="text-sm text-gray-300">
-                      Result: 
-                      <span className="text-emerald-400 block overflow-hidden break-words">
+                      Result:
+                      <span
+                        className="text-emerald-400 block overflow-hidden break-words cursor-pointer"
+                        onClick={() => copyToClipboard(result.result)}
+                      >
                         {result.result}
                       </span>
                     </p>
