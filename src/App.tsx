@@ -3,7 +3,7 @@ import { Header } from "./components/Header";
 import { TransactionCard } from "./components/TransactionCard";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { getDefaultConfig, ConnectKitProvider } from "connectkit";
-import { foundry } from "wagmi/chains";
+import { foundry, sepolia } from "wagmi/chains";
 import { http, createConfig, WagmiProvider } from "wagmi";
 
 const projectId = "4265189f60ad0e1a606df6152e4e2ca0";
@@ -11,10 +11,11 @@ const projectId = "4265189f60ad0e1a606df6152e4e2ca0";
 const config = createConfig(
   getDefaultConfig({
     // Your dApps chains
-    chains: [foundry],
+    chains: [foundry, sepolia],
     transports: {
       // RPC URL for each chain
       [foundry.id]: http("http://127.0.0.1:8545"),
+      // [sepolia.id]: http("http://127.0.0.1:8545"),
     },
 
     // Required API Keys
