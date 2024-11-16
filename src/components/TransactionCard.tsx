@@ -8,6 +8,7 @@ import { deposit, withdraw } from "./contract/zkRingSig";
 import { useEthersSigner } from "./contract/ethers";
 import data from "./lib/abi/zkRingSig.json";
 import { TransactionNotification } from "./TransactionNotification";
+import { useAccount } from "wagmi";
 
 type TransactionType = "deposit" | "withdraw";
 type TransactionStatus = "pending" | "confirmed" | "failed";
@@ -33,8 +34,10 @@ export function TransactionCard() {
   const [isHovering, setIsHovering] = useState(false);
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
 
+  const { isConnected, address = "" } = useAccount();
+
   const [withdrawNote, setWithdrawNote] = useState("");
-  const [recipientAddress, setRecipientAddress] = useState("");
+  const [recipientAddress, setRecipientAddress] = useState(address || "");
 
   const [isProcessing, setIsProcessing] = useState(false);
   const [currentTransaction, setCurrentTransaction] =
@@ -46,6 +49,10 @@ export function TransactionCard() {
   const contract = new ethers.Contract(CONTRACT_ADDRESS, data.abi, signer);
 
   const [balance, setBalance] = useState<string>("0.0 ETH");
+
+  useEffect(() => {
+    setRecipientAddress(address);
+  }, [address]);
 
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {

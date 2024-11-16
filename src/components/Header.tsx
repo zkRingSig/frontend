@@ -6,6 +6,7 @@ import { useAccount } from "wagmi";
 import { Source } from "./decryption/source";
 import { useEthersSigner } from "./contract/ethers";
 import { ethers } from "ethers";
+import { DecryptionModal } from "./DecryptionModal";
 
 import FunctionsConsumer from "./decryption/FunctionsConsumer.json";
 const abi = FunctionsConsumer;
@@ -41,6 +42,8 @@ function truncateAddress(address: string) {
 }
 
 export function Header() {
+  const [isDecryptionModalOpen, setIsDecryptionModalOpen] = useState(false);
+
   const [isScrolled, setIsScrolled] = useState(false);
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const { isConnected, address = "" } = useAccount();
@@ -148,6 +151,11 @@ export function Header() {
         } as React.CSSProperties
       }
     >
+      <DecryptionModal
+        isOpen={isDecryptionModalOpen}
+        onClose={() => setIsDecryptionModalOpen(false)}
+      />
+
       <div className="absolute inset-0 overflow-hidden">
         <div
           className="absolute inset-0 opacity-20"
@@ -198,7 +206,11 @@ export function Header() {
             </span>
           </div> */}
 
-          <div onClick={sendRequest} className="group relative">
+          <div
+            onClick={() => setIsDecryptionModalOpen(true)}
+            // onClick={sendRequest}
+            className="group relative"
+          >
             <span
               className="h-[34px] flex items-center px-4 py-2
                 text-sm rounded-full bg-gradient-to-r from-primary/10 to-accent-blue/10 text-primary
