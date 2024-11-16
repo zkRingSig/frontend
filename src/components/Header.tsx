@@ -93,7 +93,12 @@ export function Header({ proofArgs }: { proofArgs: any[] }) {
       <div className="container mx-auto px-4 h-20 flex items-center justify-between relative">
         <div className="flex items-center gap-6">
           <div className="flex items-center gap-3 group">
-            <Zap className="w-6 h-6 text-primary transition-all duration-300 group-hover:scale-125 group-hover:rotate-12" />
+            <img
+              className="w-6 h-6 text-primary transition-all duration-300 group-hover:scale-125 group-hover:rotate-12"
+              src="/zk.jpg"
+              alt="zk"
+            />
+            {/* <Zap className="w-6 h-6 text-primary transition-all duration-300 group-hover:scale-125 group-hover:rotate-12" /> */}
             <span
               className="text-2xl font-bold bg-gradient-to-r from-primary via-accent-blue to-primary bg-[length:200%_100%] bg-clip-text text-transparent animate-[text-shimmer_3s_linear_infinite] glitch-effect"
               data-text="zkRingSig"
