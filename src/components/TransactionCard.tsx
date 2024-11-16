@@ -11,7 +11,7 @@ import { TransactionNotification } from "./TransactionNotification";
 import { useAccount } from "wagmi";
 
 type TransactionType = "deposit" | "withdraw";
-type TransactionStatus = "pending" | "confirmed" | "failed";
+type TransactionStatus = "preparing" |  "pending" | "confirmed" | "failed";
 
 const MOUNT = "0.001";
 
@@ -32,6 +32,7 @@ export function TransactionCard({
 }) {
   const [transactionType, setTransactionType] =
     useState<TransactionType>("deposit");
+
 
   const [amount, setAmount] = useState(MOUNT);
 
@@ -59,6 +60,9 @@ export function TransactionCard({
   useEffect(() => {
     setRecipientAddress(address);
   }, [address]);
+
+
+
 
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
@@ -92,7 +96,19 @@ export function TransactionCard({
     fetchBalance();
   }, []);
 
-  const startTransaction = async (hash: string) => {
+
+  const clearTransaction = async () => {
+    setIsProcessing(false);
+    // Simulate transaction processing
+
+    setCurrentTransaction(null);
+  };
+
+  useEffect(() => {
+    clearTransaction();
+  }, [transactionType]);
+
+  const startTransaction = async (hash?: string) => {
     setIsProcessing(true);
     // Simulate transaction processing
 
@@ -101,7 +117,7 @@ export function TransactionCard({
       type: transactionType,
       amount,
       timestamp: Date.now(),
-      status: "pending",
+      status: !hash ? "preparing" : "pending",
     });
   };
 
@@ -114,17 +130,19 @@ export function TransactionCard({
         prev ? { ...prev, status: "confirmed" } : null
       );
       setIsProcessing(false);
-    }, 1000);
+    });
   };
 
   const onClickTx = async () => {
     try {
+
       // 取钱
       if (transactionType === "withdraw") {
         // 检查参数是否存在
         if (!withdrawNote || !recipientAddress) {
           return;
         }
+          startTransaction()
         setWLoading(true);
         const { proof, args, kH_str } = await withdraw(
           contract,
@@ -135,8 +153,15 @@ export function TransactionCard({
         const tx = await contract.withdraw(proof, args);
         startTransaction(tx.hash);
 
-        await tx.wait();
+        const receipt = await tx.wait();
+        if (receipt.status === 1) { // 1 表示交易成功
+            finisedTransaction();
+        } else {
+            // 处理交易失败的情况
+            console.error("Transaction failed");
+        }
       } else {
+        startTransaction()
         // 存钱
         setDLoading(true);
         const { note, proof, args } = await deposit();
@@ -149,13 +174,20 @@ export function TransactionCard({
           value: ethers.utils.parseUnits(MOUNT, "ether"),
         });
         startTransaction(tx.hash);
-        await tx.wait();
+        const receipt = await tx.wait();
+        if (receipt.status === 1) { // 1 表示交易成功
+            finisedTransaction();
+        } else {
+            // 处理交易失败的情况
+            console.error("Transaction failed");
+        }
       }
     } catch (error) {
       console.error(error);
     } finally {
+
       setDLoading(false);
-      finisedTransaction();
+    
     }
   };
 

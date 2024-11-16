@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { CheckCircle2, Loader2, ArrowUpRight, XCircle } from "lucide-react";
 import { cn } from "../utils/cn";
+import { truncateAddress } from "./Header";
 
 interface Transaction {
   hash: string;
@@ -33,32 +34,20 @@ export function TransactionNotification({
   }, []);
 
   const statusIcon = {
+    preparing: <Loader2 className="w-5 h-5 text-primary animate-spin" />,
     pending: <Loader2 className="w-5 h-5 text-primary animate-spin" />,
     confirmed: <CheckCircle2 className="w-5 h-5 text-primary" />,
     failed: <XCircle className="w-5 h-5 text-red-500" />,
   }[transaction.status];
 
   const statusText = {
+    preparing: "Preparing",
     pending: "Processing",
     confirmed: "Confirmed",
     failed: "Failed",
   }[transaction.status];
 
-  const explorerUrl = (() => {
-    switch (transaction.network) {
-      case "mainnet":
-        return "https://etherscan.io/tx/";
-      case "ropsten":
-        return "https://ropsten.etherscan.io/tx/";
-      case "rinkeby":
-        return "https://rinkeby.etherscan.io/tx/";
-      case "sepolia":
-        return "https://sepolia.etherscan.io/tx/";
-      default:
-        console.error("Unsupported network:", transaction.network);
-        return "#"; // Fallback URL or handle error appropriately
-    }
-  })();
+  const EXPLORER_URL = "https://sepolia.etherscan.io/tx/" as const;
 
   return (
     <div
@@ -90,16 +79,16 @@ export function TransactionNotification({
               <span className="text-xs text-gray-500">• {statusText}</span>
             </div>
 
-            <a
+       {transaction.hash &&     <a
               title={transaction.hash}
-              href={`${explorerUrl}${transaction.hash}`}
+              href={`${EXPLORER_URL}${transaction.hash}`}
               target="_blank"
               rel="noopener noreferrer"
               className="text-xs text-gray-500 hover:text-primary transition-colors duration-300 flex items-center gap-1 truncate"
             >
-              {transaction.hash}
+              {truncateAddress(transaction.hash)}
               <ArrowUpRight size={12} />
-            </a>
+            </a>}
           </div>
         </div>
       </div>

@@ -3,7 +3,6 @@ import { Zap } from "lucide-react";
 import { Button } from "./Button";
 import { ConnectKitButton } from "connectkit";
 import { useAccount } from "wagmi";
-import { Source } from "./decryption/source";
 import { useEthersSigner } from "./contract/ethers";
 import { ethers } from "ethers";
 import { DecryptionModal } from "./DecryptionModal";
@@ -16,8 +15,6 @@ import { TransactionNotification } from "./TransactionNotification";
 // Header.tsx:56 s_lastResponse:  0x307831393336333033396365306361643636336166633130356532386435643935306632316531356132366637613239616162613532393735656661643236326636307832386363323533353237396364303063393161343465643632623339646663643861626665363562613963353963616665323134343638306430363338363135
 // Header.tsx:57 s_lastError:  0x
 
-
-
 type TransactionType = "deposit" | "withdraw";
 type TransactionStatus = "pending" | "confirmed" | "failed";
 
@@ -29,7 +26,7 @@ interface Transaction {
   status: TransactionStatus;
 }
 
-function truncateAddress(address: string) {
+export function truncateAddress(address: string) {
   return `${address.slice(0, 6)}...${address.slice(-4)}`;
 }
 
@@ -43,8 +40,6 @@ export function Header({ proofArgs }: { proofArgs: any[] }) {
 
   const [currentTransaction, setCurrentTransaction] =
     useState<Transaction | null>(null);
-
-
 
   useEffect(() => {
     const handleScroll = () => {

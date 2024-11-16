@@ -45,6 +45,10 @@ export function DecryptionModal({
     setProof(proofArgsStr);
   }, [proofArgsStr]);
 
+  useEffect(() => {
+    !isOpen && setStatus("input");
+  }, [isOpen]);
+
   const readResponse = async () => {
     const functionsConsumer = new ethers.Contract(consumerAddress, abi, signer);
 
@@ -147,6 +151,7 @@ export function DecryptionModal({
           id: s_lastRequestId,
           result: s_lastResponse || s_lastError,
         });
+        clearInterval(intervalId);
       }
     }, 3000); // 3000ms = 3 seconds
 
@@ -233,11 +238,15 @@ export function DecryptionModal({
                   <div className="bg-[#2a2f36] rounded-xl p-4 mt-4 text-left">
                     <p className="text-sm text-gray-300 mb-2">
                       Transaction ID:{" "}
-                      <span className="text-emerald-400">{result.id}</span>
+                      <span className="text-emerald-400 block overflow-hidden break-words">
+                        {result.id}
+                      </span>
                     </p>
                     <p className="text-sm text-gray-300">
-                      Result:{" "}
-                      <span className="text-emerald-400">{result.result}</span>
+                      Result: 
+                      <span className="text-emerald-400 block overflow-hidden break-words">
+                        {result.result}
+                      </span>
                     </p>
                   </div>
                   <button
