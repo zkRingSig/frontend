@@ -90,14 +90,7 @@ export function TransactionCard({
     }
 
     fetchBalance();
-  }, []);
-
-  const clearTransaction = async () => {
-    setIsProcessing(false);
-    // Simulate transaction processing
-
-    setCurrentTransaction(null);
-  };
+  }, [address]);
 
   const startTransaction = async (hash?: string) => {
     setIsProcessing(true);
@@ -366,7 +359,7 @@ export function TransactionCard({
                       {withdrawNote}
                     </p>
                   ) : (
-                    <p className="text-xs text-gray-400 leading-relaxed">
+                    <p className="text-xs text-gray-400 leading-relaxed line-clamp-3">
                       Your transaction is protected by zero-knowledge proofs and
                       will remain completely anonymous on the blockchain.
                     </p>
