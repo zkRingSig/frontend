@@ -142,14 +142,14 @@ export function DecryptionModal({
   };
 
   const checkTransaction = async () => {
-    const previousRequestId = localStorage.getItem("lastRequestId") || "";
+    const { s_lastRequestId } = await readResponse();
+    const previousRequestId = s_lastRequestId;
 
     const intervalId = setTimeout(async () => {
       const { s_lastRequestId, s_lastResponse, s_lastError } =
         await readResponse();
 
       if (s_lastRequestId !== previousRequestId) {
-        localStorage.setItem("lastRequestId", s_lastRequestId);
         setStatus("success");
         setResult({
           id: s_lastRequestId,
@@ -160,7 +160,7 @@ export function DecryptionModal({
         clearTimeout(intervalId);
         checkTransaction();
       }
-    }, 3000); // 3000ms = 3 seconds
+    }, 1000); // 3000ms = 3 seconds
 
     return () => clearTimeout(intervalId); // Return a function to clear the interval if needed
   };
